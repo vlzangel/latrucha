@@ -1,4 +1,7 @@
 <?php
+	
+	wp_enqueue_style( 'vlz_styles', get_template_directory_uri()."/vlz/styles.css?v=".time(), array("storefront-style"), "1.0.0" );
+	wp_enqueue_script( 'vlz_script', get_template_directory_uri()."/vlz/scripts.js?v=".time(), array("jquery") );
 
 	function moneda($valor){
 		return "Bs F ".number_format($valor, 2, ',', '.');
@@ -60,25 +63,25 @@
 			</div>";		
 	}
 
-	function getTotalCart(){
-		$CART = WC()->cart; ?>
+	function getTotalCart(){ ?>
 
 		<?php if ( wc_coupons_enabled() ) { ?>
-			<form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
-				<div class="coupon">
-					<label for="coupon_code"><?php _e( 'Coupon:', 'woocommerce' ); ?></label> <input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php esc_attr_e( 'Coupon code', 'woocommerce' ); ?>" /> <input type="submit" class="button" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'woocommerce' ); ?>" />
-					<?php do_action( 'woocommerce_cart_coupon' ); ?>
-				</div>
+			<form id="vlz_form_cupon">
+				<input class="form_cupon_input" type="text" id="cupon" name="cupon" placeholder="Ingrese su cup&oacute;n" />
+				<input class="form_cupon_boton" type="submit" value="Aplicar Cup&oacute;n">
 			</form>
+			<div id="mensaje_cupon">
+				
+			</div>
 		<?php } ?>
 
 		<div class="cart_totals <?php echo ( WC()->customer->has_calculated_shipping() ) ? 'calculated_shipping' : ''; ?>">
 
 			<?php do_action( 'woocommerce_before_cart_totals' ); ?>
 
-			<h2><?php _e( 'Cart totals', 'woocommerce' ); ?></h2>
+			<div style='font-weight: 600; text-transform: uppercase;'><?php _e( 'Cart totals', 'woocommerce' ); ?></div>
 
-			<table cellspacing="0" class="shop_table shop_table_responsive">
+			<table cellspacing="0" class="shop_table shop_table_responsive vlz_totales">
 
 				<tr class="cart-subtotal">
 					<th><?php _e( 'Subtotal', 'woocommerce' ); ?></th>
@@ -157,18 +160,12 @@
 		</div> <?php 
 	}
 
-	function vlz_aplicar_cupon($cupon) {
-	    global $woocommerce;
-	 
-	    $coupon_code = 'feliznavidad'; // aquí tu código de cupón
-	 
-	    if ( $woocommerce->cart->has_discount( $coupon_code ) ) return;
-	 
-	    if ( $woocommerce->cart->cart_contents_total >= 1 ) {
-	        $woocommerce->cart->add_discount( $coupon_code );
-	        $woocommerce->show_messages();
-	    }
-	 
+	// Cambia texto del botón ir a la caja
+	remove_action( 'woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20 );
+	add_action( 'woocommerce_proceed_to_checkout', 'cambia_texto_boton_ir_a_pagina_pago' );
+	function cambia_texto_boton_ir_a_pagina_pago() {
+	    $checkout_url = WC()->cart->get_checkout_url(); ?>
+	    <a href="<?php echo $checkout_url; ?>" class="checkout-button button alt"><?php _e( 'Procesar Pago', 'woocommerce' ); ?></a> <?php
 	}
 
 ?>

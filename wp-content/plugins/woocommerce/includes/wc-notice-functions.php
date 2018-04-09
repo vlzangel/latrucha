@@ -123,7 +123,7 @@ function wc_clear_notices() {
  * @since 2.1
  */
 function wc_print_notices() {
-	return;
+	
 	if ( ! did_action( 'woocommerce_init' ) ) {
 		wc_doing_it_wrong( __FUNCTION__, __( 'This function should not be called before woocommerce_init.', 'woocommerce' ), '2.3' );
 		return;
