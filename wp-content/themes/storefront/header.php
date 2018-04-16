@@ -19,10 +19,6 @@
 
 <?php wp_head(); ?>
 	<!-- Modificacion Ángel Veloz -->
-	<style>
-
-
-	</style>
 </head>
 
 <body <?php body_class(); ?>>

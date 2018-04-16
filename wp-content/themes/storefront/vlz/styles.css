@@ -126,6 +126,10 @@ button.wc-bookings-booking-form-button.single_add_to_cart_button {
     font-size: 20px;
 }
 
+a.button.wc-forward {
+    display: none;
+}
+
 .cart_container {
     width: 100%;
     display: block;
@@ -140,7 +144,28 @@ button.wc-bookings-booking-form-button.single_add_to_cart_button {
 	margin-bottom: 15px;
 }
 
-.cart_container .item_cart > div {
+.product_box{
+    float: left;
+    width: calc( 100% - 45px );
+}
+
+.product_trast{
+    float: right;
+    width: 45px;
+    text-align: center;
+}
+
+.product_trast i {
+    padding: 12px 0px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.product_trast i:hover {
+    color: red;
+}
+
+.cart_container .item_cart .product_box {
 	overflow: hidden;
 }
 
@@ -151,7 +176,11 @@ button.wc-bookings-booking-form-button.single_add_to_cart_button {
 
 .cart_container .item_cart .product_precio,
 .cart_container .item_cart .product_fecha {
-	padding-left: 10px; 
+    padding-left: 10px; 
+}
+
+.cart_container .item_cart .product_precio span {
+    font-weight: 600;
 }
 
 .cart_container .item_cart .product_fecha > label {
@@ -159,7 +188,7 @@ button.wc-bookings-booking-form-button.single_add_to_cart_button {
 	text-transform: uppercase;
 }
 
-.cart_container .item_cart > div > span {
+.cart_container .item_cart .product_box span {
 	float: right;
 }
 
@@ -195,4 +224,16 @@ table.vlz_totales tbody tr td{
 	float: right;
 	width: 20%;
 	border-left: 0px;
+}
+
+button, input[type="button"], input[type="reset"], input[type="submit"], .button, .added_to_cart, .widget a.button, .site-header-cart .widget_shopping_cart a.button {
+    background-color: #333333;
+    border: solid 1px #333333 !important;
+    color: #ffffff;
+}
+
+.titulo_h1{
+    text-align: center;
+    font-weight: 600;
+    font-size: 30px;
 }

@@ -47,7 +47,7 @@ if ( ! is_ajax() ) {
 
 		<?php do_action( 'woocommerce_review_order_before_submit' ); ?>
 
-<!-- 		Modificado Angel Veloz -->
+		<!-- Modificado Angel Veloz -->
 		<?php echo apply_filters( 'woocommerce_order_button_html', '<input type="submit" class="button alt" name="woocommerce_checkout_place_order" id="place_order" value="Procesar Pago" data-value="Procesar Pago" />' ); ?>
 
 		<?php do_action( 'woocommerce_review_order_after_submit' ); ?>

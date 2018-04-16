@@ -25,7 +25,7 @@
 	   	return $fields;
 	}
 
-	function getInfoCart($cart_item){
+	function getInfoCart($cart_item, $cart_item_key){
 		$_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 		$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 		$nombre_producto = "";
@@ -47,18 +47,24 @@
 		$inicio = date("d/m/Y", $cart_item["booking"]["_start_date"]);
 		$fin = date("d/m/Y", $cart_item["booking"]["_end_date"]);
 
-		/*echo "<pre>";
-			print_r($cart_item["booking"]);
-		echo "</pre>";*/
+		$url_remove = " 
+			href='".esc_url( WC()->cart->get_remove_url( $cart_item_key ) )."'
+		";
 
 		return "
 			<div class='item_cart'> 
 				<div class='product_name'>{$nombre_producto}</div>
-				<div class='product_fecha'>
-					<label>Fecha</label> <span> {$inicio} > {$fin} </span> 
+
+				<div class='product_box'>
+					<div class='product_fecha'>
+						<label>Fecha</label> <span> {$inicio} > {$fin} </span> 
+					</div>
+					<div class='product_precio'>
+						{$personas}{$cart_item["booking"]["duration"]} - {$precio_base} <span>{$sub_total}</span> 
+					</div>
 				</div>
-				<div class='product_precio'>
-					{$personas}{$cart_item["booking"]["duration"]} - {$precio_base} <span>{$sub_total}</span> 
+				<div class='product_trast'>
+					<a {$url_remove} > <i class='far fa-trash-alt'></i> </a>
 				</div>
 			</div>";		
 	}
