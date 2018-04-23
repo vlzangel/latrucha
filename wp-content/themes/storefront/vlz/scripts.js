@@ -22,9 +22,9 @@ jQuery( document ).ready( function() {
 // vlz_form_cupon 
 
 function aplicarCupon(cupon){
-	// 
+	var url = wc_cart_params.wc_ajax_url.replace("%%endpoint%%", "apply_coupon");
 	jQuery.post(
-		"http://localhost/latrucha/carrito/?wc-ajax=apply_coupon",
+		url,
 		{
 			coupon_code: cupon,
 			security: wc_cart_params.apply_coupon_nonce
@@ -41,9 +41,9 @@ function aplicarCupon(cupon){
 }
 
 function removerCupon(cupon){
-	// 
+	var url = wc_cart_params.wc_ajax_url.replace("%%endpoint%%", "remove_coupon");
 	jQuery.post(
-		"http://localhost/latrucha/carrito/?wc-ajax=remove_coupon",
+		url,
 		{
 			coupon: cupon,
 			security: wc_cart_params.remove_coupon_nonce

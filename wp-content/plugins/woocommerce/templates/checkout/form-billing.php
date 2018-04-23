@@ -29,9 +29,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<h3><?php _e( 'Billing &amp; Shipping', 'woocommerce' ); ?></h3>
 
 	<?php else : ?>
-<!-- 		Modificado Angel Veloz -->
-		<h3><?php _e( 'Datos del Huesped', 'woocommerce' ); ?></h3>
-
+		<!-- Modificado Angel Veloz -->
+		<div class="titulo_checkout"><?php _e( 'Datos del Huesped', 'woocommerce' ); ?></div>
 	<?php endif; ?>
 
 	<?php do_action( 'woocommerce_before_checkout_billing_form', $checkout ); ?>

@@ -19,6 +19,9 @@
 
 <?php wp_head(); ?>
 	<!-- Modificacion Ángel Veloz -->
+	<script type="text/javascript">
+		var TEMA = "<?php get_template_directory_uri(); ?>";
+	</script>
 </head>
 
 <body <?php body_class(); ?>>

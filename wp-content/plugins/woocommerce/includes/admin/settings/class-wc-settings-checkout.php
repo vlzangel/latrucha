@@ -189,7 +189,7 @@ class WC_Settings_Payment_Gateways extends WC_Settings_Page {
 				),
 
 				array(
-					'title'    => __( 'Order received', 'woocommerce' ),
+					'title'    => __( 'Reserva Recibida', 'woocommerce' ),
 					'desc'     => __( 'Endpoint for the "Checkout &rarr; Order received" page.', 'woocommerce' ),
 					'id'       => 'woocommerce_checkout_order_received_endpoint',
 					'type'     => 'text',

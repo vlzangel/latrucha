@@ -22,47 +22,65 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 wc_print_notices();
 
-do_action( 'woocommerce_before_checkout_form', $checkout );
+// do_action( 'woocommerce_before_checkout_form', $checkout );
 
 // If checkout registration is disabled and not logged in, the user cannot checkout
-if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_required() && ! is_user_logged_in() ) {
+/*if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_required() && ! is_user_logged_in() ) {
 	echo apply_filters( 'woocommerce_checkout_must_be_logged_in_message', __( 'You must be logged in to checkout.', 'woocommerce' ) );
 	return;
 }
+*/
 
+echo do_shortcode( '[woocommerce_cart]' );
 ?>
 
-<form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
+<!-- <h1 class='titulo_h1'>COMPLETA TU RESERVA</h1> -->
 
-	<?php if ( $checkout->get_checkout_fields() ) : ?>
+<div class="cart_container"> 
 
-		<?php do_action( 'woocommerce_checkout_before_customer_details' ); ?>
-
-		<div class="col2-set" id="customer_details">
-			<div class="col-1">
-				<?php do_action( 'woocommerce_checkout_billing' ); ?>
+	<form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
+		<?php if ( $checkout->get_checkout_fields() ) : ?>
+			<?php do_action( 'woocommerce_checkout_before_customer_details' ); ?>
+			<div id="customer_details">
+				<div class="col-1">
+					<?php do_action( 'woocommerce_checkout_billing' ); ?>
+					<div class="form-row">
+						<div>¿D&oacute;nde nos conociste?</div>
+						<select id="encuesta" name="encuesta" class="encuesta">
+							<option value="">Seleccione una opci&oacute;n</option>
+							<option>Radio</option>
+							<option>Televisi&oacute;n</option>
+							<option>Medios Impresos</option>
+							<option>Redes Sociales</option>
+							<option>Un amigo</option>
+							<option>Otro </option>
+						</select>
+					</div>
+				</div>
 			</div>
+			<?php do_action( 'woocommerce_checkout_after_customer_details' ); ?>
+		<?php endif; ?>
 
-			<div class="col-2">
-				<?php do_action( 'woocommerce_checkout_shipping' ); ?>
-			</div>
+		<!-- Modificado Angel Veloz -->
+		<div class="titulo_checkout"><?php _e( 'Reservaci&oacute;n', 'woocommerce' ); ?></div><?php
+
+		foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+			echo getInfoCart($cart_item, $cart_item_key, "checkout");
+		}
+		echo getTotalCart("checkout"); ?>
+
+		<div class="titulo_checkout"><?php _e( 'M&eacute;todo de pago', 'woocommerce' ); ?></div>
+
+		<?php do_action( 'woocommerce_checkout_before_order_review' ); ?>
+
+		<div id="order_review" class="woocommerce-checkout-review-order">
+			<?php do_action( 'woocommerce_checkout_order_review' ); ?>
 		</div>
 
-		<?php do_action( 'woocommerce_checkout_after_customer_details' ); ?>
+		<?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
 
-	<?php endif; ?>
-
-<!-- 		Modificado Angel Veloz -->
-	<h3 id="order_review_heading"><?php _e( 'Reservaci&oacute;n', 'woocommerce' ); ?></h3>
-
-	<?php do_action( 'woocommerce_checkout_before_order_review' ); ?>
-
-	<div id="order_review" class="woocommerce-checkout-review-order">
-		<?php do_action( 'woocommerce_checkout_order_review' ); ?>
-	</div>
-
-	<?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
-
-</form>
+	</form>
 
 <?php do_action( 'woocommerce_after_checkout_form', $checkout ); ?>
+
+</div>

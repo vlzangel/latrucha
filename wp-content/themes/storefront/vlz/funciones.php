@@ -15,17 +15,42 @@
 		return $checkout_url;
 	}
 
+	/**
+	 * Actualiza la información del pedido con el nuevo campo
+	 */
+	add_action( 'woocommerce_checkout_update_order_meta', 'guardar_encuesta' );
+	function guardar_encuesta( $order_id ) {
+	    if ( ! empty( $_POST['encuesta'] ) ) {
+	        update_post_meta( $order_id, 'encuesta', sanitize_text_field( $_POST['encuesta'] ) );
+	    }
+	}
+
 	add_filter( 'woocommerce_checkout_fields' , 'set_input_attrs' );
 	function set_input_attrs( $fields ) {
-		$fields['billing']['billing_address_1']["required"] = false;
+		/*$fields['billing']['billing_address_1']["required"] = false;
 		$fields['billing']['billing_address_2']["required"] = false;
 		$fields['billing']['billing_city']["required"] = false;
 		$fields['billing']['billing_state']["required"] = false;
-		$fields['billing']['billing_postcode']["required"] = false;
+		$fields['billing']['billing_postcode']["required"] = false;*/
+
+		unset($fields['billing']['billing_address_1']);
+		unset($fields['billing']['billing_address_2']);
+		unset($fields['billing']['billing_city']);
+		unset($fields['billing']['billing_state']);
+		unset($fields['billing']['billing_postcode']);
+		unset($fields['billing']['billing_company']);
+		//unset($fields['billing']['billing_phone']);
+		unset($fields['shipping']);
+		unset($fields['order']["order_comments"]);
+
+		/*echo "<pre style='font-size: 11px;'>";
+			print_r($fields);
+		echo "</pre>";*/
+
 	   	return $fields;
 	}
 
-	function getInfoCart($cart_item, $cart_item_key){
+	function getInfoCart($cart_item, $cart_item_key, $checkout = ""){
 		$_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 		$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 		$nombre_producto = "";
@@ -51,41 +76,59 @@
 			href='".esc_url( WC()->cart->get_remove_url( $cart_item_key ) )."'
 		";
 
-		return "
-			<div class='item_cart'> 
-				<div class='product_name'>{$nombre_producto}</div>
+		if( $checkout == "" ){
+			return "
+				<div class='item_cart'> 
+					<div class='product_name'>{$nombre_producto}</div>
 
-				<div class='product_box'>
-					<div class='product_fecha'>
-						<label>Fecha</label> <span> {$inicio} > {$fin} </span> 
+					<div class='product_box'>
+						<div class='product_fecha'>
+							<label>Fecha</label> <span> {$inicio} > {$fin} </span> 
+						</div>
+						<div class='product_precio'>
+							{$personas}{$cart_item["booking"]["duration"]} - {$precio_base} <span>{$sub_total}</span> 
+						</div>
 					</div>
-					<div class='product_precio'>
-						{$personas}{$cart_item["booking"]["duration"]} - {$precio_base} <span>{$sub_total}</span> 
+					<div class='product_trast'>
+						<a {$url_remove} > <i class='far fa-trash-alt'></i> </a>
 					</div>
-				</div>
-				<div class='product_trast'>
-					<a {$url_remove} > <i class='far fa-trash-alt'></i> </a>
-				</div>
-			</div>";		
+				</div>";	
+		}else{
+			return "
+				<div class='item_cart'> 
+					<div class='product_name'>{$nombre_producto}</div>
+
+					<div class='product_box' style='width: 100%;'>
+						<div class='product_fecha'>
+							<label>Fecha</label> <span> {$inicio} > {$fin} </span> 
+						</div>
+						<div class='product_precio'>
+							{$personas}{$cart_item["booking"]["duration"]} - {$precio_base} <span>{$sub_total}</span> 
+						</div>
+					</div>
+				</div>";	
+		}
 	}
 
-	function getTotalCart(){ ?>
+	function getTotalCart($checkout = ""){ ?>
 
-		<?php if ( wc_coupons_enabled() ) { ?>
-			<form id="vlz_form_cupon">
-				<input class="form_cupon_input" type="text" id="cupon" name="cupon" placeholder="Ingrese su cup&oacute;n" />
-				<input class="form_cupon_boton" type="submit" value="Aplicar Cup&oacute;n">
-			</form>
-			<div id="mensaje_cupon">
-				
-			</div>
+		<?php if( $checkout == "" ){ ?>
+			<?php if ( wc_coupons_enabled() ) { ?>
+				<form id="vlz_form_cupon">
+					<input class="form_cupon_input" type="text" id="cupon" name="cupon" placeholder="Ingrese su cup&oacute;n" />
+					<input class="form_cupon_boton" type="submit" value="Aplicar Cup&oacute;n">
+				</form>
+				<div id="mensaje_cupon">
+					
+				</div>
+			<?php } ?>
 		<?php } ?>
 
 		<div class="cart_totals <?php echo ( WC()->customer->has_calculated_shipping() ) ? 'calculated_shipping' : ''; ?>">
 
 			<?php do_action( 'woocommerce_before_cart_totals' ); ?>
 
-			<div style='font-weight: 600; text-transform: uppercase;'><?php _e( 'Cart totals', 'woocommerce' ); ?></div>
+			<div style='font-weight: 600; text-transform: uppercase;'><?php _e( 'Total a Pagar', 'woocommerce' ); ?></div>
 
 			<table cellspacing="0" class="shop_table shop_table_responsive vlz_totales">
 
@@ -97,7 +140,11 @@
 				<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
 					<tr class="cart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
 						<th><?php wc_cart_totals_coupon_label( $coupon ); ?></th>
-						<td data-title="<?php echo esc_attr( wc_cart_totals_coupon_label( $coupon, false ) ); ?>"><?php wc_cart_totals_coupon_html( $coupon ); ?></td>
+						<?php if( $checkout == "" ){ ?>
+							<td data-title="<?php echo esc_attr( wc_cart_totals_coupon_label( $coupon, false ) ); ?>"><?php wc_cart_totals_coupon_html( $coupon ); ?></td>
+						<?php }else{ ?>
+							<td data-title="<?php echo esc_attr( wc_cart_totals_coupon_label( $coupon, false ) ); ?>"><?php vlz_wc_cart_totals_coupon_html( $coupon ); ?></td>
+						<?php } ?>
 					</tr>
 				<?php endforeach; ?>
 
@@ -157,9 +204,11 @@
 
 			</table>
 
-			<div class="wc-proceed-to-checkout">
-				<?php do_action( 'woocommerce_proceed_to_checkout' ); ?>
-			</div>
+			<?php if( $checkout == "" ){ ?>
+				<div class="wc-proceed-to-checkout">
+					<?php do_action( 'woocommerce_proceed_to_checkout' ); ?>
+				</div>
+			<?php } ?>
 
 			<?php do_action( 'woocommerce_after_cart_totals' ); ?>
 

@@ -29,7 +29,7 @@ $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_cu
 
 <section class="woocommerce-order-details">
 
-	<h2 class="woocommerce-order-details__title"><?php _e( 'Order details', 'woocommerce' ); ?></h2>
+	<h2 class="woocommerce-order-details__title"><?php _e( 'Detalles de tu reserva', 'woocommerce' ); ?></h2>
 
 	<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
 
@@ -76,7 +76,9 @@ $show_customer_details = is_user_logged_in() && $order->get_user_id() === get_cu
 	<?php do_action( 'woocommerce_order_details_after_order_table', $order ); ?>
 
 	<?php if ( $show_customer_details ) : ?>
-		<?php wc_get_template( 'order/order-details-customer.php', array( 'order' => $order ) ); ?>
+		<?php //wc_get_template( 'order/order-details-customer.php', array( 'order' => $order ) ); ?>
 	<?php endif; ?>
+
+	<a class="mis_reservas button wc-bookings-booking-form-button single_add_to_cart_button" href="<?php echo get_home_url(); ?>/mi-cuenta/bookings/">Mis Reservas</a>
 
 </section>
